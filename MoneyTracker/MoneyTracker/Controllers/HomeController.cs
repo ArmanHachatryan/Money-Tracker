@@ -25,7 +25,8 @@ namespace MoneyTracker.Controllers
         [HttpGet]
         public IActionResult GetData()
         {
-            return Json(_storage.Users.ToList());
+            var expenses = _storage.Users.Include(c => c.Expenses).ToList();
+            return Json(expenses);
         }
 
         //[HttpGet("{id}")]

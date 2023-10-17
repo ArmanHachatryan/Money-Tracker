@@ -5,28 +5,30 @@ namespace MoneyTracker.Models.Tables
     public class User
     {
         public Guid Id { get; set; }
-        public string? Login { get; set; }
-        public string? Password { get; set; }
-
+        public List<Item>? Expenses { get; set; }
         public UserProfile? Profile { get; set; }
     }
+
     public class UserProfile
     {
+        public string? Login { get; set; }
+        public string? Password { get; set; }
         public string? Name { get; set; }
-        public int Age { get; set; }
-
-        public List<Item>? Expenses { get; set; }
+        public int Age { get; set; }     
     }
+
     public class Item
     {
-        public Item(string name, string type, int price)
+        public Item(Guid id, string name, string type, int price)
         {
+            Id = id;
             Name = name;
             Type = type;
             Price = price;
+
         }
 
-        //public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public string Type { get; set; } //можно еще и enum
 

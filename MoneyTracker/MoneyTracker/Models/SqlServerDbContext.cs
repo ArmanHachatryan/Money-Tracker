@@ -15,11 +15,11 @@ namespace MoneyTracker.DataBase
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>().OwnsOne(u => u.Profile, p =>
-            {
-                p.OwnsOne(c => c.Expenses);
-            });
-
+            //modelBuilder.Entity<User>().OwnsOne(u => u.Profile, p =>
+            //{
+            //    p.OwnsOne(c => c.Expenses);
+            //});
+            modelBuilder.Entity<User>().OwnsOne(u => u.Profile);
         }
 
         public void Save()
