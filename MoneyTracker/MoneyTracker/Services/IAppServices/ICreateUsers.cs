@@ -2,6 +2,6 @@
 {
     public interface ICreateUsers
     {
-        void CreateUser();
+        void CreateUser(string login, string password);
     }
 }

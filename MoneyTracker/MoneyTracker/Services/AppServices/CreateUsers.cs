@@ -13,14 +13,14 @@ namespace Backend.Services.AppService
         }
 
         //Регистрация
-        public void CreateUser()
+        public void CreateUser(string login, string password)
         {
             User user = new User
             {
-                Id = Guid.NewGuid(),
-                Expenses = new List<Item>() { new Item(Guid.NewGuid(), "Milk", "Eat", 100), new Item(Guid.NewGuid(), "benz", "car", 400) },
+                Login = login,
+                Password = password,
                 Profile = new UserProfile 
-                { Age = 23, Name = "Tom", Login = "login1", Password = "pass1234", }
+                { Age = 23, Name = "Tom",  }
 
             };
 

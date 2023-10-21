@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using MoneyTracker.Models;
+using MoneyTracker.Models.Tables;
 using MoneyTracker.Services.IAppServices;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace MoneyTracker.Controllers
 {
@@ -22,33 +21,43 @@ namespace MoneyTracker.Controllers
             _createUser = createUsers;
         }
 
+        //[Authorize]
         [HttpGet]
         public IActionResult GetData()
         {
-            var expenses = _storage.Users.Include(c => c.Expenses).ToList();
-            return Json(expenses);
+            return Json(_storage.Users.ToList());
         }
 
-        //[HttpGet("{id}")]
-        //public IActionResult GetMessage(Guid id) 
-        //{
-        //    var message = _storage.Data.FirstOrDefault(x => x.Id == id);
-        //    return Json(message);
-        //}
-
-        //[HttpPost]
-        //public IActionResult PostData(/*[FromBody] AppData model*/)
-        //{
-        //    //_sendLetter.SendLetter(model);
-        //    _createUser.CreateUser();
-        //    return Ok();
-        //}
-
-        [HttpPost]
-        public IActionResult PostData()
+        [HttpPost("create")]
+        public IActionResult CreateUser(string login, string password)
         {
-            _createUser.CreateUser();
+            _createUser.CreateUser(login, password);
             return Ok();
+        }
+
+        [HttpPost("login")]
+        public IActionResult Login(string login, string password) 
+        {
+            User? user = _storage.Users.FirstOrDefault(p => p.Login == login && p.Password == password);
+            if (user is null) return Unauthorized();
+
+            var claims = new List<Claim> { new Claim(ClaimTypes.Name, login) };
+            var jwt = new JwtSecurityToken(
+                    issuer: AuthOptions.ISSUER,
+                    audience: AuthOptions.AUDIENCE,
+                    claims: claims,
+                    expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(2)), // время действия 2 минуты
+                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+
+            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+
+            var response = new
+            {
+                access_token = encodedJwt,
+                username = user.Login
+            };
+
+            return Json(response);
         }
     }
 }
