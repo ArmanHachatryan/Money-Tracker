@@ -18,7 +18,7 @@ namespace MoneyTracker.DataBase
         {
             modelBuilder.Entity<User>().OwnsOne(u => u.Profile);
             modelBuilder.Entity<User>()
-                .HasIndex(u => u.Login)
+                .HasIndex(u => u.Email)
                 .IsUnique();
         }
 

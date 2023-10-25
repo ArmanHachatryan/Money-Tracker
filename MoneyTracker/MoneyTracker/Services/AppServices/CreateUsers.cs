@@ -13,11 +13,11 @@ namespace Backend.Services.AppService
         }
 
         //Регистрация
-        public void CreateUser(string login, string password)
+        public void CreateUser(string email, string password)
         {
             User user = new User
             {
-                Login = login,
+                Email = email,
                 Password = password,
                 Profile = new UserProfile 
                 { Age = 23, Name = "Tom",  }

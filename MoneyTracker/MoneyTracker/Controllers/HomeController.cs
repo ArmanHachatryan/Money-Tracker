@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using MoneyTracker.Authorization;
 using MoneyTracker.Models;
 using MoneyTracker.Models.Tables;
 using MoneyTracker.Services.IAppServices;
@@ -21,7 +23,7 @@ namespace MoneyTracker.Controllers
             _createUser = createUsers;
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpGet]
         public IActionResult GetData()
         {
@@ -29,19 +31,19 @@ namespace MoneyTracker.Controllers
         }
 
         [HttpPost("create")]
-        public IActionResult CreateUser(string login, string password)
+        public IActionResult CreateUser(User data)
         {
-            _createUser.CreateUser(login, password);
+            _createUser.CreateUser(data.Email, data.Password);
             return Ok();
         }
 
         [HttpPost("login")]
-        public IActionResult Login(string login, string password) 
+        public IActionResult Login(User data) 
         {
-            User? user = _storage.Users.FirstOrDefault(p => p.Login == login && p.Password == password);
+            User? user = _storage.Users.FirstOrDefault(p => p.Email == data.Email && p.Password == data.Password);
             if (user is null) return Unauthorized();
 
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, login) };
+            var claims = new List<Claim> { new Claim(ClaimTypes.Name, data.Email) };
             var jwt = new JwtSecurityToken(
                     issuer: AuthOptions.ISSUER,
                     audience: AuthOptions.AUDIENCE,
@@ -54,7 +56,7 @@ namespace MoneyTracker.Controllers
             var response = new
             {
                 access_token = encodedJwt,
-                username = user.Login
+                username = user.Email
             };
 
             return Json(response);
