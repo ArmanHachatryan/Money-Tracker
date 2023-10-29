@@ -20,7 +20,7 @@ namespace Backend.Services.AppService
                 Email = email,
                 Password = password,
                 Profile = new UserProfile 
-                { Age = 23, Name = "Tom",  }
+                { Age = 0, Name = "default",  }
 
             };
 
