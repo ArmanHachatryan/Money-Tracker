@@ -23,17 +23,41 @@ namespace MoneyTracker.Controllers
             _createUser = createUsers;
         }
 
-        [Authorize]
-        [HttpGet]
-        public IActionResult GetData()
+        [HttpGet("users")]
+        public IActionResult GetUsers()
         {
             return Json(_storage.Users.ToList());
+        }
+
+        //[Authorize]
+        [HttpGet("items")]
+        public IActionResult GetData(int id)
+        {
+            var items = _storage.Costs.Where(x => x.UserId == id).ToList();
+            return Json(items);
         }
 
         [HttpPost("create")]
         public IActionResult CreateUser(User data)
         {
             _createUser.CreateUser(data.Email, data.Password);
+            return Ok();
+        }
+
+        [HttpPost("cost")]
+        public IActionResult AddCost(Cost data) 
+        {
+            Cost cost = new Cost
+            {
+                Id = data.Id,
+                Type= data.Type,
+                Price= data.Price,
+                UserId= data.UserId, //вынести 
+
+            };
+
+            _storage.Costs.Add(cost);
+            _storage.Save();
             return Ok();
         }
 
@@ -56,7 +80,7 @@ namespace MoneyTracker.Controllers
             var response = new
             {
                 access_token = encodedJwt,
-                username = user.Email
+                userid = user.Id
             };
 
             return Json(response);
