@@ -15,54 +15,32 @@ namespace MoneyTracker.Controllers
     public class HomeController : Controller
     {
         private readonly ISqlServerDbContext _storage;
-        private readonly ICreateUsers _createUser;
+        private readonly ICreateUserService _createUser;
 
-        public HomeController(ISqlServerDbContext storage, ICreateUsers createUsers)
+        public HomeController(ISqlServerDbContext storage, ICreateUserService createUsers)
         {
             _storage = storage;
             _createUser = createUsers;
         }
 
-        [HttpGet("users")]
-        public IActionResult GetUsers()
-        {
-            return Json(_storage.Users.ToList());
-        }
-
-        //[Authorize]
-        [HttpGet("items")]
-        public IActionResult GetData(int id)
-        {
-            var items = _storage.Costs.Where(x => x.UserId == id).ToList();
-            return Json(items);
-        }
-
-        [HttpPost("create")]
+        //Регистрация пользователя
+        [HttpPost("signIn")]
         public IActionResult CreateUser(User data)
         {
-            _createUser.CreateUser(data.Email, data.Password);
-            return Ok();
-        }
-
-        [HttpPost("cost")]
-        public IActionResult AddCost(Cost data) 
-        {
-            Cost cost = new Cost
+            User? user = _storage.Users.FirstOrDefault(p => p.Email == data.Email);
+            if (user is null)
             {
-                Id = data.Id,
-                Type= data.Type,
-                Price= data.Price,
-                UserId= data.UserId, //вынести 
+                _createUser.CreateUser(data.Email, data.Password);
+                return Ok();
+            }
+            return BadRequest("Пользователь с таким Email уже есть в базе данных");
 
-            };
 
-            _storage.Costs.Add(cost);
-            _storage.Save();
-            return Ok();
         }
 
-        [HttpPost("login")]
-        public IActionResult Login(User data) 
+        //Авторизация пользователя
+        [HttpPost("logIn")]
+        public IActionResult Login(User data)
         {
             User? user = _storage.Users.FirstOrDefault(p => p.Email == data.Email && p.Password == data.Password);
             if (user is null) return Unauthorized();
@@ -80,10 +58,42 @@ namespace MoneyTracker.Controllers
             var response = new
             {
                 access_token = encodedJwt,
-                userid = user.Id
+                user_id = user.Id
             };
 
             return Json(response);
+        }
+
+        //Только для админа
+        [HttpGet("users")]
+        public IActionResult GetUsers()
+        {
+            return Json(_storage.Users.ToList());
+        }
+
+        //Создание расхода
+        [HttpPost("createExpense")]
+        public IActionResult AddCost(Expense data) 
+        {
+            Expense cost = new Expense
+            {
+                Type= data.Type,
+                Price= data.Price,
+                UserId= data.UserId, //вынести 
+
+            };
+
+            _storage.Expenses.Add(cost);
+            _storage.Save();
+            return Ok();
+        }
+
+        //Получение списка расходов
+        [Authorize]
+        [HttpGet("expenses")]
+        public IActionResult GetData(Guid user_id)
+        {
+            return Json(_storage.Expenses.Where(x => x.UserId == user_id).ToList());
         }
     }
 }

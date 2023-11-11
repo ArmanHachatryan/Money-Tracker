@@ -7,7 +7,7 @@ namespace MoneyTracker.Models
     {
         DbSet<User> Users { get; set; }
 
-        DbSet<Cost> Costs { get; set; }
+        DbSet<Expense> Expenses { get; set; }
 
         void Save();
     }

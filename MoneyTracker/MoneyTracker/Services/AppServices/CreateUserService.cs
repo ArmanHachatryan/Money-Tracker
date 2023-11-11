@@ -4,10 +4,10 @@ using MoneyTracker.Services.IAppServices;
 
 namespace Backend.Services.AppService
 {
-    public class CreateUsers : ICreateUsers
+    public class CreateUserService : ICreateUserService
     {
         private readonly ISqlServerDbContext _storage;
-        public CreateUsers(ISqlServerDbContext storage) 
+        public CreateUserService(ISqlServerDbContext storage) 
         {
             _storage = storage;
         }
@@ -19,9 +19,6 @@ namespace Backend.Services.AppService
             {
                 Email = email,
                 Password = password,
-                Profile = new UserProfile 
-                { Age = 0, Name = "default",  }
-
             };
 
             _storage.Users.Add(user);

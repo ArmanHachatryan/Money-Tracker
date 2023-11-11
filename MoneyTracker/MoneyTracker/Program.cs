@@ -35,7 +35,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 //db
 string connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ISqlServerDbContext, SqlServerDbContext>(options => options.UseSqlServer(connection));
-builder.Services.AddTransient<ICreateUsers, CreateUsers>();
+builder.Services.AddTransient<ICreateUserService, CreateUserService>();
 
 builder.Services.AddCors(c =>
 {
