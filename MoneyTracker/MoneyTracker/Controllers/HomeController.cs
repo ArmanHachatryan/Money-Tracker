@@ -89,11 +89,11 @@ namespace MoneyTracker.Controllers
         }
 
         //Получение списка расходов
-        [Authorize]
+        //[Authorize]
         [HttpGet("expenses")]
-        public IActionResult GetData(Guid user_id)
+        public IActionResult GetData(Guid user_id, string type)
         {
-            return Json(_storage.Expenses.Where(x => x.UserId == user_id).ToList());
+            return Json(_storage.Expenses.Where(x => x.UserId == user_id & x.Type == type).Sum(u => u.Price));
         }
     }
 }
