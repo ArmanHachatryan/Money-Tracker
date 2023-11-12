@@ -9,6 +9,11 @@ const Head = () => {
 
     const navigate = useNavigate();
 
+    const deleteToken = () => {
+        sessionStorage.removeItem('myAccessData');
+        navigate('/login')
+    }
+
     return (
         <>
         <HeaderContainer>
@@ -16,7 +21,7 @@ const Head = () => {
             <HeaderCSS.MenuContainer>
                 <Button onClick={ () => navigate('/') }>Регистрация</Button>
                 <Button onClick={ () => navigate('/login') }>Авторизация</Button>
-                <Button onClick={ () => navigate('/main') }>Главное меню</Button>
+                <Button onClick={ deleteToken }>Выйти</Button>
             </HeaderCSS.MenuContainer>
         </HeaderContainer>
         </>

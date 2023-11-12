@@ -6,7 +6,7 @@ const {FooterContainer} = css
 const Foot = () => {
     return (
         <>
-        <FooterContainer></FooterContainer>
+        <FooterContainer/>
         </>
     )
 }

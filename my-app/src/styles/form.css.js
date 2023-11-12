@@ -24,13 +24,13 @@ const css = {
         display:block;
         position:relative;
         width:100%;
-        height:40px;
+        height:50px;
         outline:none;
         border:none;
         background-color: rgb(229, 229, 229);
         padding-left:14px;
         border-radius: 4px;
-        margin-bottom: 10px;
+        margin-bottom: 20px;
         :last-child {
             margin-bottom: 0px;
         }
@@ -61,6 +61,12 @@ const css = {
         text-align:center;
         font-size: 16px;
         border: none;
+    `,
+
+    
+    H1: styled.h1`
+        display: block;
+        margin-bottom:10px;
     `
 
 }

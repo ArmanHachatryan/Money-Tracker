@@ -33,7 +33,7 @@ namespace MoneyTracker.Controllers
                 _createUser.CreateUser(data.Email, data.Password);
                 return Ok();
             }
-            return BadRequest("Пользователь с таким Email уже есть в базе данных");
+            return BadRequest();
 
 
         }
@@ -50,7 +50,7 @@ namespace MoneyTracker.Controllers
                     issuer: AuthOptions.ISSUER,
                     audience: AuthOptions.AUDIENCE,
                     claims: claims,
-                    expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(2)), // время действия 2 минуты
+                    //expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(2)), // время действия 2 минуты
                     signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
 
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);

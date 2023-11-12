@@ -22,8 +22,6 @@ const css = {
         width: 100%;
         height: 80px;
         background-color: #E5E5E5;
-        
-        
     `,
 
     Button: styled.span`
@@ -41,6 +39,24 @@ const css = {
         
     `,
 
+    DataContainer: styled.div`
+        display : flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        position:relative;
+        width: 800px;
+        height: auto;
+        min-height: 80px;
+        background-color: #white;
+        margin: 40px auto 40px;
+        padding: 20px;
+        border-style: solid;
+        border-width: 2px;
+        border-radius: 4px;
+        border-color:rgb(229, 229, 229);
+    `,
+
     HeaderCSS: {
         Logo: styled.div`
             font-size:34px;
@@ -54,6 +70,8 @@ const css = {
             position:relative;
         `
     }
+
+
 }
 
 export default css
