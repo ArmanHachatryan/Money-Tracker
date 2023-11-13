@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {Routes, Route} from 'react-router-dom'
 import Head from '../src/components/views/global/Head'
 import Foot from '../src/components/views/global/Foot'
@@ -7,6 +7,7 @@ import LogIn from './components/pages/Login'
 import Main from './components/pages/Main'
 
 function App() {
+  const [auth, setAuth] = useState(false);
 
   return (
     <>
@@ -18,11 +19,11 @@ function App() {
       />
       <Route
         path={'/login'}
-        element={<LogIn/>}
+        element={<LogIn setAuth={setAuth}/>}
       />
       <Route
         path={'/main'}
-        element={<Main/>}
+        element={<Main auth={auth}/>}
       />
     </Routes>
     <Foot/>

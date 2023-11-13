@@ -10,10 +10,12 @@ const defaultFormData = {
   password: "",
 };
 
-const LogIn = () => {
+const LogIn = (props) => {
+
+  const {setAuth} = props;
+
   const navigate = useNavigate();
   const [formData, setFormData] = useState(defaultFormData);
-
   const [error, setError] = useState(false);
 
   const onChange = (e) => {
@@ -36,6 +38,7 @@ const LogIn = () => {
       sessionStorage.setItem("myAccessData", jsonData);
       setFormData(defaultFormData);
       navigate("/main");
+      setAuth(true);
     } catch (error) {
       setError(true);
     }

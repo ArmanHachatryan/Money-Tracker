@@ -50,7 +50,6 @@ namespace MoneyTracker.Controllers
                     issuer: AuthOptions.ISSUER,
                     audience: AuthOptions.AUDIENCE,
                     claims: claims,
-                    //expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(2)), // время действия 2 минуты
                     signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
 
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
@@ -64,14 +63,8 @@ namespace MoneyTracker.Controllers
             return Json(response);
         }
 
-        //Только для админа
-        [HttpGet("users")]
-        public IActionResult GetUsers()
-        {
-            return Json(_storage.Users.ToList());
-        }
-
         //Создание расхода
+        [Authorize]
         [HttpPost("createExpense")]
         public IActionResult AddCost(Expense data) 
         {
@@ -89,7 +82,7 @@ namespace MoneyTracker.Controllers
         }
 
         //Получение списка расходов
-        //[Authorize]
+        [Authorize]
         [HttpGet("expenses")]
         public IActionResult GetData(Guid user_id, string type)
         {

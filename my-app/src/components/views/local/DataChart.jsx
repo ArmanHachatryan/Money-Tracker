@@ -116,7 +116,10 @@ const MyResponsivePie = ({ data }) => (
     />
 )
 
-const DataChart = () => {
+const DataChart = (props) => {
+
+    const {food, house, car, connection, etc} = props;
+
     return (
         <>
             <DataContainer style={{height: "500px"}}>
@@ -125,31 +128,31 @@ const DataChart = () => {
                         {
                           "id": "Еда",
                           "label": "Еда",
-                          "value": 445,
+                          "value": food,
                           "color": "hsl(69, 70%, 50%)"
                         },
                         {
                           "id": "Транспорт",
                           "label": "Транспорт",
-                          "value": 131,
+                          "value": car,
                           "color": "hsl(20, 70%, 50%)"
                         },
                         {
                           "id": "Связь",
                           "label": "Связь",
-                          "value": 556,
+                          "value": connection,
                           "color": "hsl(271, 70%, 50%)"
                         },
                         {
                           "id": "Бытовые товары",
                           "label": "Бытовые товары",
-                          "value": 528,
+                          "value": house,
                           "color": "hsl(150, 70%, 50%)"
                         },
                         {
                           "id": "Прочее",
                           "label": "Прочее",
-                          "value": 502,
+                          "value": etc,
                           "color": "hsl(217, 70%, 50%)"
                         }
                       ]

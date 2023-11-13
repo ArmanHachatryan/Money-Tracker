@@ -8,7 +8,7 @@ const defaultFormData = {
   price: 0,
 };
 
-const { FormContainer, Button, Input, H1 } = css;
+const { FormContainer, Button, Input, H1, Span } = css;
 
 const DataCreate = (props) => {
   const { action } = props;
@@ -33,14 +33,20 @@ const DataCreate = (props) => {
     try {
       await axios.post(
         "https://localhost:44357/api/Home/createExpense",
-        formData
+        formData,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: "Bearer " + current_data.access_token,
+          },
+        }
       );
 
-      console.log("success");
+      console.log("DataCreate Success");
       setFormData(defaultFormData);
       action();
     } catch (error) {
-      console.log("error");
+      console.log("DataCreate Error");
     }
   };
 
@@ -48,6 +54,14 @@ const DataCreate = (props) => {
     <>
       <FormContainer>
         <H1>Ввод расходов</H1>
+        <Span>Еда, Транспорт, Бытовые расходы, Связь, Прочее</Span>
+        <Input
+          value={formData.type}
+          placeholder="Введите тип расхода (например: Еда)"
+          type={"text"}
+          id={"type"}
+          onChange={onChange}
+        />
         <Input
           value={formData.price}
           placeholder="сумма"
