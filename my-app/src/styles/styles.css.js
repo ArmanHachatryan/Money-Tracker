@@ -22,7 +22,7 @@ const css = {
         width: 100%;
         height: 80px;
         background-color: #E5E5E5;
-        margin-top:320px;
+
     `,
 
     Button: styled.span`

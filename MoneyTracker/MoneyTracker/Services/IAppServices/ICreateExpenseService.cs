@@ -1,7 +1,9 @@
-﻿namespace MoneyTracker.Services.IAppServices
+﻿using MoneyTracker.Models.Tables;
+
+namespace MoneyTracker.Services.IAppServices
 {
     public interface ICreateExpenseService
     {
-        void CreateExpense(string login, string password);
+        void CreateExpense(Expense data);
     }
 }

@@ -9,7 +9,7 @@ namespace MoneyTracker.Services.AppServices
 {
     public class AuthService
     {
-        public string AuthUser(User? data)
+        public string GiveTocken(User? data)
         {
             var claims = new List<Claim> { new Claim(ClaimTypes.Name, data.Email) };
             var jwt = new JwtSecurityToken(
