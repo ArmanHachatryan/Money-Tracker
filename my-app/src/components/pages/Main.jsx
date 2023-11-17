@@ -4,8 +4,9 @@ import DataChart from "../views/local/DataChart";
 import DataCreate from "../views/local/DataCreate";
 import UnAuth from "../views/local/UnAuth";
 
-const Main = (props) => {
-  const {auth} = props
+const Main = () => {
+
+  const [auth, setAuth] = useState(false);
 
   const [food, setFood] = useState(0);
   const [car, setCar] = useState(0);
@@ -34,6 +35,8 @@ const Main = (props) => {
       else if (myProp === "Бытовые расходы") setHouse(response.data)
       else if (myProp === "Связь") setConnection(response.data)
       else if (myProp === "Прочее") setEtc(response.data)
+
+      setAuth(true);
 
     } catch (error) {
       console.log("Main error");

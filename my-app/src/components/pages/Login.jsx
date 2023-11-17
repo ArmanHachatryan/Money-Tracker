@@ -12,8 +12,6 @@ const defaultFormData = {
 
 const LogIn = (props) => {
 
-  const {setAuth} = props;
-
   const navigate = useNavigate();
   const [formData, setFormData] = useState(defaultFormData);
   const [error, setError] = useState(false);
@@ -38,7 +36,6 @@ const LogIn = (props) => {
       sessionStorage.setItem("myAccessData", jsonData);
       setFormData(defaultFormData);
       navigate("/main");
-      setAuth(true);
     } catch (error) {
       setError(true);
     }
