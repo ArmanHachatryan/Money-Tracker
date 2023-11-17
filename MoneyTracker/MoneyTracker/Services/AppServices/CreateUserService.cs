@@ -12,7 +12,6 @@ namespace Backend.Services.AppService
             _storage = storage;
         }
 
-        //Регистрация
         public void CreateUser(string email, string password)
         {
             User user = new User

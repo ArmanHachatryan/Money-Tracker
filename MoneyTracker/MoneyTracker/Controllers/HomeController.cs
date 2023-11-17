@@ -16,16 +16,21 @@ namespace MoneyTracker.Controllers
     {
         private readonly ISqlServerDbContext _storage;
         private readonly ICreateUserService _createUser;
+        private readonly ICreateExpenseService _createExpense;
+        private readonly IAuthService _authService;
 
-        public HomeController(ISqlServerDbContext storage, ICreateUserService createUsers)
+        public HomeController(ISqlServerDbContext storage, ICreateUserService createUsers, 
+            ICreateExpenseService createExpense, IAuthService authService)
         {
             _storage = storage;
             _createUser = createUsers;
+            _createExpense = createExpense;
+            _authService = authService;
         }
 
         //Регистрация пользователя
         [HttpPost("signIn")]
-        public IActionResult CreateUser(User data)
+        public IActionResult SignIn(User data)
         {
             User? user = _storage.Users.FirstOrDefault(p => p.Email == data.Email);
             if (user is null)
@@ -34,29 +39,18 @@ namespace MoneyTracker.Controllers
                 return Ok();
             }
             return BadRequest();
-
-
         }
 
-        //Авторизация пользователя
+        //Авторизация пользователя и присвоение токена
         [HttpPost("logIn")]
-        public IActionResult Login(User data)
+        public IActionResult LogIn(User data)
         {
             User? user = _storage.Users.FirstOrDefault(p => p.Email == data.Email && p.Password == data.Password);
             if (user is null) return Unauthorized();
 
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, data.Email) };
-            var jwt = new JwtSecurityToken(
-                    issuer: AuthOptions.ISSUER,
-                    audience: AuthOptions.AUDIENCE,
-                    claims: claims,
-                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
-
-            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-
             var response = new
             {
-                access_token = encodedJwt,
+                access_token = _authService.GiveTocken(user),
                 user_id = user.Id
             };
 
@@ -66,25 +60,16 @@ namespace MoneyTracker.Controllers
         //Создание расхода
         [Authorize]
         [HttpPost("createExpense")]
-        public IActionResult AddCost(Expense data) 
+        public IActionResult AddExpense(Expense data) 
         {
-            Expense cost = new Expense
-            {
-                Type= data.Type,
-                Price= data.Price,
-                UserId= data.UserId, //вынести 
-
-            };
-
-            _storage.Expenses.Add(cost);
-            _storage.Save();
+            _createExpense.CreateExpense(data);
             return Ok();
         }
 
-        //Получение списка расходов
+        //Полученить общую суммы расходов по типу
         [Authorize]
         [HttpGet("expenses")]
-        public IActionResult GetData(Guid user_id, string type)
+        public IActionResult GetSum(Guid user_id, string type)
         {
             return Json(_storage.Expenses.Where(x => x.UserId == user_id & x.Type == type).Sum(u => u.Price));
         }
