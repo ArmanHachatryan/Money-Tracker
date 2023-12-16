@@ -17,15 +17,13 @@ namespace MoneyTracker.Controllers
         private readonly ISqlServerDbContext _storage;
         private readonly ICreateUserService _createUser;
         private readonly ICreateExpenseService _createExpense;
-        private readonly IAuthService _authService;
 
         public HomeController(ISqlServerDbContext storage, ICreateUserService createUsers, 
-            ICreateExpenseService createExpense, IAuthService authService)
+            ICreateExpenseService createExpense)
         {
             _storage = storage;
             _createUser = createUsers;
             _createExpense = createExpense;
-            _authService = authService;
         }
 
         //Регистрация пользователя
@@ -48,9 +46,18 @@ namespace MoneyTracker.Controllers
             User? user = _storage.Users.FirstOrDefault(p => p.Email == data.Email && p.Password == data.Password);
             if (user is null) return Unauthorized();
 
+            var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Email) };
+            var jwt = new JwtSecurityToken(
+                    issuer: AuthOptions.ISSUER,
+                    audience: AuthOptions.AUDIENCE,
+                    claims: claims,
+                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+
+            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+
             var response = new
             {
-                access_token = _authService.GiveTocken(user),
+                access_token = encodedJwt,
                 user_id = user.Id
             };
 
